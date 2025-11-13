@@ -21,9 +21,17 @@ namespace X {
 
         void OnUpdate(f32 dT) override {}
 
-        void OnPaint(const Canvas* canvas) override {
+        void OnPaint(Canvas* canvas) override {
             canvas->Begin();
-            { canvas->Clear(Color::Blue()); }
+            {
+                canvas->Clear();
+
+                canvas->SetFillColor(Color::Red());
+                canvas->SetStrokeColor(Color::White());
+                canvas->SetStrokeWidth(4.0f);
+
+                canvas->DrawLine(Point(10.f, 10.f), Point(200.f, 300.f));
+            }
             canvas->End();
         }
 

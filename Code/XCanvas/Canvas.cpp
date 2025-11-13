@@ -41,6 +41,16 @@ namespace X {
         if (mShaderProgram != 0) glUseProgram(0);
     }
 
+    void Canvas::DrawLine(const f32 x0, const f32 y0, const f32 x1, const f32 y1) const {
+        const vector<f32> vertices = {ScreenToClipX(x0), ScreenToClipY(y0), ScreenToClipX(x1), ScreenToClipY(y1)};
+        glUniform4f(mColorLocation, mStrokeColor.r, mStrokeColor.g, mStrokeColor.b, mStrokeColor.a);
+        DrawVertices(vertices, GL_LINES);
+    }
+
+    void Canvas::DrawLine(const Point& start, const Point& end) const {
+        DrawLine(start.x, start.y, end.x, end.y);
+    }
+
     void Canvas::InitShaders() {
         const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &Shaders::kVertexShaderSource, nullptr);
@@ -98,13 +108,17 @@ namespace X {
         glBindVertexArray(0);
     }
 
-    void Canvas::DrawVertices(const vector<f32>& vertices, GLenum mode) {}
+    void Canvas::DrawVertices(const vector<f32>& vertices, GLenum mode) const {
+        glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(f32), vertices.data(), GL_DYNAMIC_DRAW);
+        glDrawArrays(mode, 0, vertices.size() / 2);
+    }
 
     f32 Canvas::ScreenToClipX(f32 x) const {
-        return x;
+        return (2.0f * x / (f32)mWidth) - 1.0f;
     }
 
     f32 Canvas::ScreenToClipY(f32 y) const {
-        return y;
+        return 1.0f - (2.0f * y / (f32)mHeight);
     }
 }  // namespace X

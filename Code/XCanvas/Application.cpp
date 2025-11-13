@@ -131,5 +131,7 @@ namespace X {
             app->GetRootCanvas()->Resize(width, height);
             app->OnWindowResize(width, height);
         }
+
+        glViewport(0, 0, width, height);
     }
 }  // namespace X

@@ -7,6 +7,7 @@
 #include <glad/glad.h>
 
 #include "Color.hpp"
+#include "Point.hpp"
 #include "Typedefs.hpp"
 #include "Macros.hpp"
 
@@ -22,10 +23,25 @@ namespace X {
         void Begin() const;
         void End() const;
 
+        void SetFillColor(const Color& fillColor) {
+            mFillColor = fillColor;
+        }
+
+        void SetStrokeColor(const Color& strokeColor) {
+            mStrokeColor = strokeColor;
+        }
+
+        void SetStrokeWidth(const f32 width) {
+            mStrokeWidth = width;
+        }
+
+        void DrawLine(f32 x0, f32 y0, f32 x1, f32 y1) const;
+        void DrawLine(const Point& start, const Point& end) const;
+
     private:
         void InitShaders();
         void SetupBuffers();
-        void DrawVertices(const vector<f32>& vertices, GLenum mode);
+        void DrawVertices(const vector<f32>& vertices, GLenum mode) const;
 
         X_ND f32 ScreenToClipX(f32 x) const;
         X_ND f32 ScreenToClipY(f32 y) const;

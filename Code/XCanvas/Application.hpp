@@ -19,7 +19,7 @@ namespace X {
         virtual ~Application();
 
         virtual void OnUpdate(f32 dT) {};
-        virtual void OnPaint(const Canvas* canvas) {}
+        virtual void OnPaint(Canvas* canvas) {}
         virtual void OnStartup() {}
         virtual void OnShutdown() {}
         virtual void OnKeyPress(u32 keyCode) {}
