@@ -16,6 +16,7 @@ namespace X {
     class Application {
     public:
         explicit Application(i32 argc, char* argv[]);
+        explicit Application(i32 argc, char* argv[], const string& title);
         virtual ~Application();
 
         virtual void OnUpdate(f32 dT) {};
@@ -36,6 +37,10 @@ namespace X {
 
         X_ND vector<string> GetArgs() const& {
             return mArgs;
+        }
+
+        void SetTitle(const string& title) {
+            mTitle = title;
         }
 
     private:

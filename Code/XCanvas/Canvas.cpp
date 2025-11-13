@@ -51,6 +51,43 @@ namespace X {
         DrawLine(start.x, start.y, end.x, end.y);
     }
 
+    void Canvas::DrawRectangle(f32 x, f32 y, f32 width, f32 height, bool filled) const {
+        vector<f32> vertices;
+
+        if (filled) {
+            // Two triangles for filled rectangle
+            vertices = {ScreenToClipX(x),
+                        ScreenToClipY(y),
+                        ScreenToClipX(x + width),
+                        ScreenToClipY(y),
+                        ScreenToClipX(x + width),
+                        ScreenToClipY(y + height),
+
+                        ScreenToClipX(x),
+                        ScreenToClipY(y),
+                        ScreenToClipX(x + width),
+                        ScreenToClipY(y + height),
+                        ScreenToClipX(x),
+                        ScreenToClipY(y + height)};
+
+            glUniform4f(mColorLocation, mFillColor.r, mFillColor.g, mFillColor.b, mFillColor.a);
+            DrawVertices(vertices, GL_TRIANGLES);
+        } else {
+            // Line loop for outline
+            vertices = {ScreenToClipX(x),
+                        ScreenToClipY(y),
+                        ScreenToClipX(x + width),
+                        ScreenToClipY(y),
+                        ScreenToClipX(x + width),
+                        ScreenToClipY(y + height),
+                        ScreenToClipX(x),
+                        ScreenToClipY(y + height)};
+
+            glUniform4f(mColorLocation, mStrokeColor.r, mStrokeColor.g, mStrokeColor.b, mStrokeColor.a);
+            DrawVertices(vertices, GL_LINE_LOOP);
+        }
+    }
+
     void Canvas::InitShaders() {
         const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShader, 1, &Shaders::kVertexShaderSource, nullptr);

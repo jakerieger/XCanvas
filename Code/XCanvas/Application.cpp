@@ -23,6 +23,10 @@ namespace X {
         }
     }
 
+    Application::Application(i32 argc, char* argv[], const string& title) : Application(argc, argv) {
+        mTitle = title;
+    }
+
     Application::~Application() {
         if (mRootCanvas) { mRootCanvas.reset(); }  // Make sure canvas is reset before GLFW destroys the window context
         if (mWindow) { glfwDestroyWindow(mWindow); }

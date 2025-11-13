@@ -38,6 +38,16 @@ namespace X {
         void DrawLine(f32 x0, f32 y0, f32 x1, f32 y1) const;
         void DrawLine(const Point& start, const Point& end) const;
 
+        void DrawRectangle(f32 x, f32 y, f32 width, f32 height, bool filled = true) const;
+
+        X_ND u32 GetWidth() const {
+            return mWidth;
+        }
+
+        X_ND u32 GetHeight() const {
+            return mHeight;
+        }
+
     private:
         void InitShaders();
         void SetupBuffers();

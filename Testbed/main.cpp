@@ -10,7 +10,7 @@
 namespace X {
     class TestbedApp final : public Application {
     public:
-        explicit TestbedApp(i32 argc, char* argv[]) : Application(argc, argv) {}
+        explicit TestbedApp(i32 argc, char* argv[]) : Application(argc, argv, "Testbed") {}
 
         void OnStartup() override {
             std::cout << "Provided arguments:\n";
@@ -30,7 +30,8 @@ namespace X {
                 canvas->SetStrokeColor(Color::White());
                 canvas->SetStrokeWidth(4.0f);
 
-                canvas->DrawLine(Point(10.f, 10.f), Point(200.f, 300.f));
+                canvas->DrawLine(Point(10.f, 10.f), Point(200.f, 10.f));
+                canvas->DrawRectangle(100, 100, 400, 600);
             }
             canvas->End();
         }
