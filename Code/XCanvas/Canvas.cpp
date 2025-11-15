@@ -6,6 +6,7 @@
 #include "Shaders.hpp"
 
 #include <iostream>
+#include <cmath>
 
 namespace X {
     Canvas::Canvas(u32 width, u32 height) : mWidth(width), mHeight(height) {
@@ -21,7 +22,7 @@ namespace X {
 
     void Canvas::Clear(const Color& clearColor) const {
         if (mShaderProgram == 0) { std::cout << "Canvas::Clear() - No currently bound shader program\n"; }
-        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        glClearColor(clearColor.R(), clearColor.G(), clearColor.B(), clearColor.A());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
@@ -43,7 +44,7 @@ namespace X {
 
     void Canvas::DrawLine(const f32 x0, const f32 y0, const f32 x1, const f32 y1) const {
         const vector<f32> vertices = {ScreenToClipX(x0), ScreenToClipY(y0), ScreenToClipX(x1), ScreenToClipY(y1)};
-        glUniform4f(mColorLocation, mStrokeColor.r, mStrokeColor.g, mStrokeColor.b, mStrokeColor.a);
+        glUniform4f(mColorLocation, mStrokeColor.R(), mStrokeColor.G(), mStrokeColor.B(), mStrokeColor.A());
         DrawVertices(vertices, GL_LINES);
     }
 
@@ -70,7 +71,7 @@ namespace X {
                         ScreenToClipX(x),
                         ScreenToClipY(y + height)};
 
-            glUniform4f(mColorLocation, mFillColor.r, mFillColor.g, mFillColor.b, mFillColor.a);
+            glUniform4f(mColorLocation, mFillColor.R(), mFillColor.G(), mFillColor.B(), mFillColor.A());
             DrawVertices(vertices, GL_TRIANGLES);
         } else {
             // Line loop for outline
@@ -83,7 +84,61 @@ namespace X {
                         ScreenToClipX(x),
                         ScreenToClipY(y + height)};
 
-            glUniform4f(mColorLocation, mStrokeColor.r, mStrokeColor.g, mStrokeColor.b, mStrokeColor.a);
+            glUniform4f(mColorLocation, mStrokeColor.R(), mStrokeColor.G(), mStrokeColor.B(), mStrokeColor.A());
+            DrawVertices(vertices, GL_LINE_LOOP);
+        }
+    }
+
+    void Canvas::DrawCircle(f32 x, f32 y, f32 radius, u32 segments, bool filled) const {
+        vector<f32> vertices;
+
+        if (filled) {
+            // Triangle fan for filled circle
+            vertices.push_back(ScreenToClipX(x));
+            vertices.push_back(ScreenToClipY(y));
+
+            for (int i = 0; i <= segments; ++i) {
+                const f32 angle = 2.0f * M_PI * i / segments;
+                vertices.push_back(ScreenToClipX(x + radius * cos(angle)));
+                vertices.push_back(ScreenToClipY(y + radius * sin(angle)));
+            }
+
+            glUniform4f(mColorLocation, mFillColor.R(), mFillColor.G(), mFillColor.B(), mFillColor.A());
+            DrawVertices(vertices, GL_TRIANGLE_FAN);
+        } else {
+            // Line loop for outline
+            for (int i = 0; i < segments; ++i) {
+                const f32 angle = 2.0f * M_PI * i / segments;
+                vertices.push_back(ScreenToClipX(x + radius * cos(angle)));
+                vertices.push_back(ScreenToClipY(y + radius * sin(angle)));
+            }
+
+            glUniform4f(mColorLocation, mStrokeColor.R(), mStrokeColor.G(), mStrokeColor.B(), mStrokeColor.A());
+            DrawVertices(vertices, GL_LINE_LOOP);
+        }
+    }
+
+    void Canvas::DrawPolygon(const vector<Point>& points, bool filled) const {
+        if (points.size() < 3) return;
+
+        vector<f32> vertices;
+
+        if (filled) {
+            // Simple triangle fan (works for convex polygons)
+            for (const auto& point : points) {
+                vertices.push_back(ScreenToClipX(point.x));
+                vertices.push_back(ScreenToClipY(point.y));
+            }
+
+            glUniform4f(mColorLocation, mFillColor.R(), mFillColor.G(), mFillColor.B(), mFillColor.A());
+            DrawVertices(vertices, GL_TRIANGLE_FAN);
+        } else {
+            for (const auto& point : points) {
+                vertices.push_back(ScreenToClipX(point.x));
+                vertices.push_back(ScreenToClipY(point.y));
+            }
+
+            glUniform4f(mColorLocation, mStrokeColor.R(), mStrokeColor.G(), mStrokeColor.B(), mStrokeColor.A());
             DrawVertices(vertices, GL_LINE_LOOP);
         }
     }

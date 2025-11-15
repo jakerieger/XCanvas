@@ -13,10 +13,7 @@ namespace X {
         explicit TestbedApp(i32 argc, char* argv[]) : Application(argc, argv, "Testbed") {}
 
         void OnStartup() override {
-            std::cout << "Provided arguments:\n";
-            for (auto& arg : GetArgs()) {
-                std::cout << arg << std::endl;
-            }
+            Application::OnStartup();
         }
 
         void OnUpdate(f32 dT) override {}
@@ -26,18 +23,23 @@ namespace X {
             {
                 canvas->Clear();
 
-                canvas->SetFillColor(Color::Red());
-                canvas->SetStrokeColor(Color::White());
-                canvas->SetStrokeWidth(4.0f);
+                canvas->SetStrokeColor(Colors::Red);
+                canvas->DrawLine({10, 10}, {100, 100});
 
-                canvas->DrawLine(Point(10.f, 10.f), Point(200.f, 10.f));
-                canvas->DrawRectangle(100, 100, 400, 600);
+                canvas->SetStrokeColor(Colors::Magenta);
+                canvas->DrawRectangle(100, 100, 400, 600, false);
+
+                canvas->SetFillColor(Colors::Green);
+                canvas->DrawCircle(200, 300, 100, 32);
+
+                canvas->SetFillColor(Colors::Cyan);
+                canvas->DrawPolygon({{300, 300}, {600, 300}, {300, 600}});
             }
             canvas->End();
         }
 
         void OnKeyPress(u32 keyCode) override {
-            if (keyCode == GLFW_KEY_ESCAPE) { Quit(); }
+            if (keyCode == Keys::Escape) { Quit(); }
         }
     };
 }  // namespace X

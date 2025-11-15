@@ -4,9 +4,11 @@
 
 #pragma once
 
+#include "Typedefs.hpp"
+
 namespace X {
     struct Point {
-        float x, y;
-        explicit Point(float x = 0, float y = 0) : x(x), y(y) {}
+        f32 x, y;
+        Point(f32 x, f32 y) : x(x), y(y) {}
     };
 }  // namespace X

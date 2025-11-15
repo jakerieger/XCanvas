@@ -1,36 +1,143 @@
 // Author: Jake Rieger
-// Created: 11/11/25.
+// Created: 4/16/2025.
 //
 
 #pragma once
+#pragma warning(disable : 4244)
+
+#include <iomanip>
+#include <sstream>
+#include "Typedefs.hpp"
+#include "Macros.hpp"
 
 namespace X {
-    struct Color {
-        float r, g, b, a;
+    /// @brief Encapsulation for representing colors
+    class Color {
+    public:
+        Color() = default;
+        Color(f32 r, f32 g, f32 b, f32 a = 1.0f);
 
-        explicit Color(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f) : r(r), g(g), b(b), a(a) {}
+        explicit Color(f32 v, f32 a = 1.0f);
+        explicit Color(u32 color);
+        explicit Color(const string& hex);
+        explicit Color(u8 r, u8 g, u8 b, u8 a = 255);
+        explicit Color(const f32* color);
 
-        static Color RGB(int r, int g, int b, int a = 255) {
-            return Color(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f);
+        Color(const Color& other);
+        Color& operator=(const Color& other);
+
+        Color(Color&& other) noexcept;
+        Color& operator=(Color&& other) noexcept;
+
+        bool operator==(const Color& other) const;
+        bool operator!=(const Color& other) const;
+
+        // Component setters
+        X_ND Color WithAlpha(f32 a) const;
+        X_ND Color WithBlue(f32 b) const;
+        X_ND Color WithGreen(f32 g) const;
+        X_ND Color WithRed(f32 r) const;
+
+        // Modifiers
+        X_ND Color Brightness(f32 factor) const;
+        X_ND Color Greyscale() const;
+        X_ND Color Saturate(f32 factor) const;
+        X_ND Color Desaturate(f32 factor) const;
+
+        // Conversions
+        X_ND string ToString() const;
+        X_ND u32 ToU32() const;
+        X_ND u32 ToU32_ABGR() const;
+        void ToFloatArray(f32* color) const;
+        void ToHSV(f32& h, f32& s, f32& v) const;
+
+        template<typename T>
+        X_ND T To() const {
+            return T {};
         }
 
-        static Color Black() {
-            return Color(0, 0, 0, 1);
-        }
-        static Color White() {
-            return Color(1, 1, 1, 1);
-        }
-        static Color Red() {
-            return Color(1, 0, 0, 1);
-        }
-        static Color Green() {
-            return Color(0, 1, 0, 1);
-        }
-        static Color Blue() {
-            return Color(0, 0, 1, 1);
-        }
-        static Color Transparent() {
-            return Color {0, 0, 0, 0};
-        }
+        // Components
+        X_ND f32 R() const;
+        X_ND f32 G() const;
+        X_ND f32 B() const;
+        X_ND f32 A() const;
+        X_ND f32 Luminance() const;
+
+        // Static methods
+        static Color AlphaBlend(const Color& foreground, const Color& background);
+        static Color Lerp(const Color& a, const Color& b, f32 t);
+        static Color Multiply(const Color& a, const Color& b);
+        static Color Screen(const Color& a, const Color& b);
+        static Color Overlay(const Color& a, const Color& b);
+        static Color SoftLight(const Color& a, const Color& b);
+        static Color HardLight(const Color& a, const Color& b);
+        static Color ColorDodge(const Color& a, const Color& b);
+        static Color ColorBurn(const Color& a, const Color& b);
+        static Color FromHSV(f32 h, f32 s, f32 v, f32 a = 1.0f);
+
+    private:
+        f32 mRed {0.0f};
+        f32 mGreen {0.0f};
+        f32 mBlue {0.0f};
+        f32 mAlpha {1.0f};
+
+        /// @see
+        /// https:stackoverflow.com/questions/61138110/what-is-the-correct-gamma-correction-function
+        static f32 LinearizeComponent(f32 v);
+
+        static u32 FloatToU32(f32 v);
+        static f32 U32ToFloat(u32 v);
     };
+
+    template<>
+    X_ND inline u32 Color::To() const {
+        const auto redByte   = CAST<u8>(FloatToU32(mRed));
+        const auto greenByte = CAST<u8>(FloatToU32(mGreen));
+        const auto blueByte  = CAST<u8>(FloatToU32(mBlue));
+        const auto alphaByte = CAST<u8>(FloatToU32(mAlpha));
+        return (alphaByte << 24) | (redByte << 16) | (greenByte << 8) | blueByte;
+    }
+
+    template<>
+    X_ND inline string Color::To() const {
+        const u32 r = U32ToFloat(mRed + 0.5f);
+        const u32 g = U32ToFloat(mGreen + 0.5f);
+        const u32 b = U32ToFloat(mBlue + 0.5f);
+        std::stringstream ss;
+        ss << "#" << std::hex << std::setfill('0') << std::setw(2) << (r & 0xFF) << std::setw(2) << (g & 0xFF)
+           << std::setw(2) << (b & 0xFF);
+        return ss.str();
+    }
+
+    namespace Colors {
+        static Color White {1.0f, 1.0f, 1.0f};
+        static Color Black {0.0f, 0.0f, 0.0f};
+        static Color Red {1.0f, 0.0f, 0.0f};
+        static Color Green {0.0f, 1.0f, 0.0f};
+        static Color Blue {0.0f, 0.0f, 1.0f};
+        static Color Yellow {1.0f, 1.0f, 0.0f};
+        static Color Magenta {1.0f, 0.0f, 1.0f};
+        static Color Cyan {0.0f, 1.0f, 1.0f};
+        static Color LightGrey {0.75f, 0.75f, 0.75f};
+        static Color Grey {0.5f, 0.5f, 0.5f};
+        static Color DarkGrey {0.25f, 0.25f, 0.25f};
+        static Color White25 {1.0f, 1.0f, 1.0f, 0.25f};
+        static Color White50 {1.0f, 1.0f, 1.0f, 0.5f};
+        static Color White75 {1.0f, 1.0f, 1.0f, 0.75f};
+        static Color Black25 {0.0f, 0.0f, 0.0f, 0.25f};
+        static Color Black50 {0.0f, 0.0f, 0.0f, 0.5f};
+        static Color Black75 {0.0f, 0.0f, 0.0f, 0.75f};
+        static Color Transparent {0.0f, 0.0f};
+    }  // namespace Colors
 }  // namespace X
+
+#ifndef X_COLOR_HASH_SPECIALIZATION
+    #define X_COLOR_HASH_SPECIALIZATION
+// Allow Color to be used as a key with STL maps/sets
+template<>
+struct std::hash<X::Color> {
+    std::size_t operator()(const X::Color& color) const noexcept {
+        return std::hash<X::u32> {}(color.ToU32());
+    }
+};  // namespace std
+#endif

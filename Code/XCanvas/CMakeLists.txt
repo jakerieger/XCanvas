@@ -11,8 +11,11 @@ add_library(XCanvas STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/Application.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Canvas.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Canvas.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Color.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Color.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Macros.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Math.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Input.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Point.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Shaders.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Typedefs.hpp

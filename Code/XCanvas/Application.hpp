@@ -9,6 +9,7 @@
 
 #include "Macros.hpp"
 #include "Typedefs.hpp"
+#include "Input.hpp"
 
 namespace X {
     class Canvas;
@@ -21,7 +22,7 @@ namespace X {
 
         virtual void OnUpdate(f32 dT) {};
         virtual void OnPaint(Canvas* canvas) {}
-        virtual void OnStartup() {}
+        virtual void OnStartup();
         virtual void OnShutdown() {}
         virtual void OnKeyPress(u32 keyCode) {}
         virtual void OnMouseButtonPress(u32 buttonCode) {}

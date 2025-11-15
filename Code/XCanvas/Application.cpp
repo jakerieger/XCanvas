@@ -5,6 +5,7 @@
 #include "Application.hpp"
 #include "Canvas.hpp"
 
+#include <iostream>
 #include <stdexcept>
 #include <sstream>
 
@@ -31,6 +32,11 @@ namespace X {
         if (mRootCanvas) { mRootCanvas.reset(); }  // Make sure canvas is reset before GLFW destroys the window context
         if (mWindow) { glfwDestroyWindow(mWindow); }
         glfwTerminate();
+    }
+
+    void Application::OnStartup() {
+        std::cout << " -- XCanvas application initialized: " << mTitle << "\n";
+        std::cout << " -- Created window with dimensions: " << mWidth << "x" << mHeight << "\n";
     }
 
     bool Application::Run() {

@@ -17,7 +17,7 @@ namespace X {
         Canvas(u32 width, u32 height);
         ~Canvas();
 
-        void Clear(const Color& clearColor = Color::Black()) const;
+        void Clear(const Color& clearColor = Colors::Black) const;
         void Resize(u32 width, u32 height);
 
         void Begin() const;
@@ -37,8 +37,9 @@ namespace X {
 
         void DrawLine(f32 x0, f32 y0, f32 x1, f32 y1) const;
         void DrawLine(const Point& start, const Point& end) const;
-
         void DrawRectangle(f32 x, f32 y, f32 width, f32 height, bool filled = true) const;
+        void DrawCircle(f32 x, f32 y, f32 radius, u32 segments, bool filled = true) const;
+        void DrawPolygon(const vector<Point>& points, bool filled = true) const;
 
         X_ND u32 GetWidth() const {
             return mWidth;
@@ -59,8 +60,8 @@ namespace X {
         u32 mWidth;
         u32 mHeight;
 
-        Color mFillColor {Color::Transparent()};
-        Color mStrokeColor {Color::Transparent()};
+        Color mFillColor {Colors::Transparent};
+        Color mStrokeColor {Colors::Transparent};
         f32 mStrokeWidth {0.0f};
 
         GLuint mShaderProgram {0};
