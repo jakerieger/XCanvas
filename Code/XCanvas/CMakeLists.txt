@@ -18,6 +18,7 @@ add_library(XCanvas STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/Input.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Point.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Shaders.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Shared.hpp
         ${CMAKE_CURRENT_SOURCE_DIR}/Typedefs.hpp
 )
 

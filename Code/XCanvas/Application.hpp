@@ -7,8 +7,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "Macros.hpp"
-#include "Typedefs.hpp"
+#include "Shared.hpp"
 #include "Input.hpp"
 
 namespace X {
@@ -44,6 +43,10 @@ namespace X {
             mTitle = title;
         }
 
+    protected:
+        u32 mWidth {1280};
+        u32 mHeight {720};
+
     private:
         void Initialize();
         void SetupOpenGL() const;
@@ -55,8 +58,6 @@ namespace X {
 
         GLFWwindow* mWindow {nullptr};
         string mTitle {"XCanvas Application"};
-        u32 mWidth {1280};
-        u32 mHeight {720};
         bool mRunning {false};
         vector<string> mArgs;
         f64 mLastFrameTime {0.0};

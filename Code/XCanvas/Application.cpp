@@ -120,7 +120,9 @@ namespace X {
 
     void Application::KeyCallback(GLFWwindow* window, i32 key, i32 scancode, i32 action, i32 mods) {
         auto* app = CAST<Application*>(glfwGetWindowUserPointer(window));
-        if (app) { app->OnKeyPress(key); }
+        if (app) {
+            if (action == GLFW_PRESS) { app->OnKeyPress(key); }
+        }
     }
 
     void Application::MouseButtonCallback(GLFWwindow* window, i32 button, i32 action, i32 mods) {

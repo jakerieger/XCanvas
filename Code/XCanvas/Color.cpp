@@ -5,7 +5,6 @@
 #pragma warning(disable : 4244)
 
 #include "Color.hpp"
-#include "Math.hpp"
 
 #include <cmath>
 #include <utility>

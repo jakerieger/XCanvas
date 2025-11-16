@@ -6,10 +6,9 @@
 
 #include <glad/glad.h>
 
+#include "Shared.hpp"
 #include "Color.hpp"
 #include "Point.hpp"
-#include "Typedefs.hpp"
-#include "Macros.hpp"
 
 namespace X {
     class Canvas {

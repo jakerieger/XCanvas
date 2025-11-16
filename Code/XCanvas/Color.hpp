@@ -7,8 +7,8 @@
 
 #include <iomanip>
 #include <sstream>
-#include "Typedefs.hpp"
-#include "Macros.hpp"
+
+#include "Shared.hpp"
 
 namespace X {
     /// @brief Encapsulation for representing colors
